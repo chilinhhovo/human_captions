@@ -186,6 +186,29 @@
         font-size: 2em;
       }
     }
+    .nav-buttons {
+      text-align: center;
+      margin: 2rem;
+      position: relative;
+      z-index: 5;
+    }
+    
+    .nav-buttons button {
+      padding: 0.75rem 1.5rem;
+      margin: 0 0.5rem;
+      font-size: 1rem;
+      background: white;
+      color: black;
+      border: 2px solid black;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    
+    .nav-buttons button:hover {
+      background: #f6f6f6;
+    }
   </style>
 </head>
 <body>
@@ -528,7 +551,9 @@
 
   <div class="content-container">
 <div class="full-width-container">
-    <a href="https://chilinhhovo.github.io/human_captions_1/">next > </a>
+    <div class="nav-buttons">
+      <button onclick="handleNextClick()">Next</button>
+    </div>
   </div>
 <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
 <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
