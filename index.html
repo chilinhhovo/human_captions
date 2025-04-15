@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Narrative Dot Story</title>
+  <!-- Google fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <!-- Add Perfectly Nineties font for quotes -->
+  <style>
+    @font-face {
+      font-family: 'Perfectly Nineties';
+      src: url('https://fonts.cdnfonts.com/css/perfectly-nineties') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
+  
+    body { 
+      margin: 0; 
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background: white; 
+      overflow-x: hidden;
+      font-size: 20px;
+      text-rendering: optimizeLegibility;
+      line-height: 1.6;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100vh;
+    }
+    .scroll-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      padding-bottom: 50px;
+    }
+    section {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3em;
+      text-align: center;
+      box-sizing: border-box;
+      position: relative;
+      margin-bottom: 0;
+    }
+    .text-block {
+      background: rgba(255,255,255,0.85);
+      padding: 2em;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 3;
+    }
+    .caption-box {
+      margin-top: 1em;
+      font-size: 1.2em;
+      font-style: italic;
+      font-family: 'Perfectly Nineties', cursive;
+      color: #cc0000;
+    }
+    .full-width-container {
+      width: 100%;
+      min-height: auto;
+      background: white;
+      padding: 4em 2em;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 3;
+      margin-bottom: 20px;
+    }
+    .content-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .container-70 {
+      max-width: 640px;
+      margin: 2em auto;
+      padding: 2em;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 3;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 5px;
+      border: 1px solid #eee;
+    }
+    h1 {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-weight: bold;
+      font-size: 2.5em;
+      line-height: 1.1;
+      margin-top: 0;
+      margin-bottom: 0.5em;
+    }
+    h2 {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.3;
+    }
+    p {
+      line-height: 1.6;
+      margin: 0;
+      padding-bottom: 1.2em;
+    }
+    .full-width-container h1, 
+    .container-70 h1 {
+      text-align: center;
+      margin-bottom: 1em;
+    }
+    .full-width-container p, 
+    .container-70 p {
+      max-width: 800px;
+      margin: 0 auto 1.5em;
+      line-height: 1.6;
+    }
+    figure {
+      margin: 0;
+      padding-bottom: 1.2em;
+    }
+    figcaption {
+      font-size: 0.8em;
+      text-align: center;
+      margin-top: 0.5em;
+      color: #666;
+    }
+    iframe, img, video {
+      max-width: 100%;
+      display: block;
+      margin: 0 auto;
+    }
+    .humor-clusters-img {
+      max-width: 90%;
+      height: auto;
+      margin: 2em auto;
+    }
+    a {
+      color: #f05349;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .visualization-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto 40px;
+      position: relative;
+    }
+    .dashboard-img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 1em;
+    }
+    blockquote {
+      font-family: 'Perfectly Nineties', cursive;
+      font-style: italic;
+      max-width: 800px;
+      margin: 2em auto;
+      border-left: 4px solid #ccc;
+      padding-left: 1em;
+    }
+    .byline {
+      text-align: center;
+      font-size: 0.9em;
+      margin-bottom: 2em;
+    }
+    
+    @media (max-width: 640px) {
+      body {
+        font-size: 18px;
+      }
+      .container-70 {
+        padding-left: 1em;
+        padding-right: 1em;
+        margin: 1em auto;
+      }
+      h1 {
+        font-size: 2em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="dotCanvas" width="1600" height="900"></canvas>
+
+<!-- Scrolly section with dots animation -->
+<div class="scroll-container">
+  <section data-frame="0">
+    <div class="text-block">
+      <img src="567_Dashboard.jpg" alt="contest567" class="dashboard-img">
+    </div>
+  </section>
+  
+  <section data-frame="0">
+    <div class="text-block">
+      <h2>New Yorker Cartoon Contest #567</h2>
+      <p>We focused on one cartoon — a man embedded in a mattress with a coffee cup and briefcase. Readers submitted 4,014 captions submitted to the New Yorker contest 567.</p>
+    </div>
+  </section>
+  
+  <section data-frame="1">
+    <div class="text-block">
+      <h2>The Voting</h2>
+      <p>Some received thousands of votes. Most, only a few.</p>
+    </div>
+  </section>
+  
+  <section data-frame="2">
+    <div class="text-block">
+      <h2>One stood out</h2>
+      <p>Getting both the highest number of funny votes and unfunny votes.</p>
+    </div>
+  </section>
+  
+  <section data-frame="3">
+    <div class="text-block">
+      <h2>The Funniest Caption</h2>
+      <p>It had the highest average funniness score:</p>
+      <div class="caption-box">"Like I'm the first person who's tried sleeping their way to the top."</div>
+    </div>
+  </section>
+</div>
+
+<!-- Main content starts here -->
+<div class="full-width-container">
+  <div class="content-container">
+    <!-- Quote visualization -->
+    <div class="visualization-container">
+      <!-- Generated by ai2html v0.121.1 - 2025-04-14 10:19 -->
+      <!-- ai file: quote.ai -->
+      <style media="screen,print">
+        #g-quote-box ,
+        #g-quote-box .g-artboard {
+          margin:0 auto;
+        }
+        #g-quote-box p {
+          margin:0;
+        }
+        #g-quote-box .g-aiAbs {
+          position:absolute;
+        }
+        #g-quote-box .g-aiImg {
+          position:absolute;
+          top:0;
+          display:block;
+          width:100% !important;
+        }
+        #g-quote-box .g-aiSymbol {
+          position: absolute;
+          box-sizing: border-box;
+        }
+        #g-quote-box .g-aiPointText p { white-space: nowrap; }
+        #g-quote-full {
+          position:relative;
+          overflow:hidden;
+        }
+        #g-quote-full p {
+          font-weight:regular;
+          line-height:36px;
+          opacity:1;
+          letter-spacing:0em;
+          font-size:24px;
+          text-align:left;
+          color:rgb(0,0,0);
+          text-transform:none;
+          padding-bottom:0;
+          padding-top:0;
+          mix-blend-mode:normal;
+          font-style:normal;
+          height:auto;
+          position:static;
+        }
+        #g-quote-full .g-pstyle0 {
+          font-weight:500;
+          text-align:center;
+        }
+        #g-quote-medium {
+          position:relative;
+          overflow:hidden;
+        }
+        #g-quote-medium p {
+          font-weight:regular;
+          line-height:36px;
+          opacity:1;
+          letter-spacing:0em;
+          font-size:24px;
+          text-align:left;
+          color:rgb(0,0,0);
+          text-transform:none;
+          padding-bottom:0;
+          padding-top:0;
+          mix-blend-mode:normal;
+          font-style:normal;
+          height:auto;
+          position:static;
+        }
+        #g-quote-medium .g-pstyle0 {
+          font-weight:500;
+          text-align:center;
+        }
+        #g-quote-mobile {
+          position:relative;
+          overflow:hidden;
+        }
+        #g-quote-mobile p {
+          font-weight:regular;
+          line-height:36px;
+          opacity:1;
+          letter-spacing:0em;
+          font-size:24px;
+          text-align:left;
+          color:rgb(0,0,0);
+          text-transform:none;
+          padding-bottom:0;
+          padding-top:0;
+          mix-blend-mode:normal;
+          font-style:normal;
+          height:auto;
+          position:static;
+        }
+        #g-quote-mobile .g-pstyle0 {
+          font-weight:500;
+          text-align:center;
+        }
+        #g-quote-full_copy {
+          position:relative;
+          overflow:hidden;
+        }
+        #g-quote-full_copy p {
+          font-weight:regular;
+          line-height:36px;
+          opacity:1;
+          letter-spacing:0em;
+          font-size:24px;
+          text-align:left;
+          color:rgb(0,0,0);
+          text-transform:none;
+          padding-bottom:0;
+          padding-top:0;
+          mix-blend-mode:normal;
+          font-style:normal;
+          height:auto;
+          position:static;
+        }
+        #g-quote-full_copy .g-pstyle0 {
+          font-weight:500;
+          font-size:18px;
+          text-align:center;
+        }
+        #g-quote-full_copy .g-pstyle1 {
+          font-weight:500;
+          text-align:center;
+        }
+        #g-quote-medium_copy {
+          position:relative;
+          overflow:hidden;
+        }
+        #g-quote-medium_copy p {
+          font-weight:regular;
+          line-height:36px;
+          opacity:1;
+          letter-spacing:0em;
+          font-size:24px;
+          text-align:left;
+          color:rgb(0,0,0);
+          text-transform:none;
+          padding-bottom:0;
+          padding-top:0;
+          mix-blend-mode:normal;
+          font-style:normal;
+          height:auto;
+          position:static;
+        }
+        #g-quote-medium_copy .g-pstyle0 {
+          font-weight:500;
+          font-size:18px;
+          text-align:center;
+        }
+        #g-quote-medium_copy .g-pstyle1 {
+          font-weight:500;
+          text-align:center;
+        }
+        #g-quote-mobile_copy {
+          position:relative;
+          overflow:hidden;
+        }
+        #g-quote-mobile_copy p {
+          font-weight:regular;
+          line-height:36px;
+          opacity:1;
+          letter-spacing:0em;
+          font-size:24px;
+          text-align:left;
+          color:rgb(0,0,0);
+          text-transform:none;
+          padding-bottom:0;
+          padding-top:0;
+          mix-blend-mode:normal;
+          font-style:normal;
+          height:auto;
+          position:static;
+        }
+        #g-quote-mobile_copy .g-pstyle0 {
+          font-weight:500;
+          font-size:18px;
+          text-align:center;
+        }
+        #g-quote-mobile_copy .g-pstyle1 {
+          font-weight:500;
+          text-align:center;
+        }
+      </style>
+
+      <div id="g-quote-box" class="ai2html ai2html-responsive">
+        <!-- Artboard: full -->
+        <div id="g-quote-full" class="g-artboard" style="width:700px; height:425px;" data-aspect-ratio="1.647" data-min-width="700">
+          <div style=""></div>
+          <img id="g-quote-full-img" class="g-quote-full-img g-aiImg" alt="" src="quote-full.png"/>
+          <div id="g-ai0-1" class="g-ai2html-settings g-aiAbs" style="top:38.1176%;left:49.8614%;margin-left:-22%;width:44%;">
+            <p class="g-pstyle0">Like     I'm the first person who's tried sleeping their way to the top</p>
+          </div>
+        </div>
+
+        <!-- Artboard: medium -->
+        <div id="g-quote-medium" class="g-artboard" style="width:490px; height:350px;" data-aspect-ratio="1.4" data-min-width="490" data-max-width="699">
+          <div style=""></div>
+          <img id="g-quote-medium-img" class="g-quote-medium-img g-aiImg" alt="" src="quote-medium.png"/>
+          <div id="g-ai1-1" class="g-ai2html-settings g-aiAbs" style="top:33.1429%;left:50.1081%;margin-left:-31.4286%;width:62.8571%;">
+            <p class="g-pstyle0">Like     I'm the first person who's tried sleeping their way to the top</p>
+          </div>
+        </div>
+
+        <!-- Artboard: mobile -->
+        <div id="g-quote-mobile" class="g-artboard" style="max-width: 375px;max-height: 203px" data-aspect-ratio="1.849" data-min-width="0" data-max-width="489">
+          <div style="padding: 0 0 54.08% 0;"></div>
+          <img id="g-quote-mobile-img" class="g-quote-mobile-img g-aiImg" alt="" src="quote-mobile.png"/>
+          <div id="g-ai2-1" class="g-ai2html-settings g-aiAbs" style="top:23.1755%;left:51.7412%;margin-left:-41.0667%;width:82.1333%;">
+            <p class="g-pstyle0">Like     I'm the first person who's tried sleeping their way to the top</p>
+          </div>
+        </div>
+
+        <!-- Artboard: full_copy -->
+        <div id="g-quote-full_copy" class="g-artboard" style="width:700px; height:425px;" data-aspect-ratio="1.647" data-min-width="700">
+          <div style=""></div>
+          <img id="g-quote-full_copy-img" class="g-quote-full_copy-img g-aiImg" alt="" src="quote-full_copy.png"/>
+          <div id="g-ai3-1" class="g-ai2html-settings g-aiAbs" style="top:17.1765%;left:16.0169%;margin-left:-14.5714%;width:29.1429%;">
+            <p class="g-pstyle0">Something real</p>
+          </div>
+          <div id="g-ai3-2" class="g-ai2html-settings g-aiAbs" style="top:39.7647%;left:51.7185%;margin-left:-22%;width:44%;">
+            <p class="g-pstyle1">Like     I'm the first person who's tried sleeping their way to the top</p>
+          </div>
+          <div id="g-ai3-3" class="g-ai2html-settings g-aiAbs" style="top:76.7059%;left:77.5169%;margin-left:-16.6429%;width:33.2857%;">
+            <p class="g-pstyle0">Something surprising</p>
+          </div>
+        </div>
+
+        <!-- Artboard: medium_copy -->
+        <div id="g-quote-medium_copy" class="g-artboard" style="width:490px; height:350px;" data-aspect-ratio="1.4" data-min-width="490" data-max-width="699">
+          <div style=""></div>
+          <img id="g-quote-medium_copy-img" class="g-quote-medium_copy-img g-aiImg" alt="" src="quote-medium_copy.png"/>
+          <div id="g-ai4-1" class="g-ai2html-settings g-aiAbs" style="top:12.8571%;left:17.065%;margin-left:-20.8163%;width:41.6327%;">
+            <p class="g-pstyle0">Something real</p>
+          </div>
+          <div id="g-ai4-2" class="g-ai2html-settings g-aiAbs" style="top:34.8571%;left:55.2101%;margin-left:-31.4286%;width:62.8571%;">
+            <p class="g-pstyle1">Like     I'm the first person who's tried sleeping their way to the top</p>
+          </div>
+          <div id="g-ai4-3" class="g-ai2html-settings g-aiAbs" style="top:80.5714%;left:79.0037%;margin-left:-23.7755%;width:47.551%;">
+            <p class="g-pstyle0">Something surprising</p>
+          </div>
+        </div>
+
+        <!-- Artboard: mobile_copy -->
+        <div id="g-quote-mobile_copy" class="g-artboard" style="max-width: 375px;max-height: 328px" data-aspect-ratio="1.144" data-min-width="0" data-max-width="489">
+          <div style="padding: 0 0 87.4133% 0;"></div>
+          <img id="g-quote-mobile_copy-img" class="g-quote-mobile_copy-img g-aiImg" alt="" src="quote-mobile_copy.png"/>
+          <div id="g-ai5-1" class="g-ai2html-settings g-aiAbs" style="top:13.7279%;left:53.3649%;margin-left:-27.2%;width:54.4%;">
+            <p class="g-pstyle0">Something real</p>
+          </div>
+          <div id="g-ai5-2" class="g-ai2html-settings g-aiAbs" style="top:32.9469%;left:52.5412%;margin-left:-41.0667%;width:82.1333%;">
+            <p class="g-pstyle1">Like     I'm the first person who's tried sleeping their way to the top</p>
+          </div>
+          <div id="g-ai5-3" class="g-ai2html-settings g-aiAbs" style="top:82.0622%;left:69.2316%;margin-left:-31.0667%;width:62.1333%;">
+            <p class="g-pstyle0">Something surprising</p>
+          </div>
+        </div>
+      </div>
+
+      <script type="text/javascript">
+        (function (containerId, opts) {
+          var nameSpace = opts.namespace || '';
+          var containers = findContainers(containerId);
+          containers.forEach(resize);
+
+          function resize(container) {
+            var onResize = throttle(update, 200);
+            var waiting = !!window.IntersectionObserver;
+            var observer;
+            update();
+
+            document.addEventListener('DOMContentLoaded', update);
+            window.addEventListener('resize', onResize);
+
+            // NYT Scoop-specific code
+            if (opts.setup) {
+              opts.setup(container).on('cleanup', cleanup);
+            }
+
+            function cleanup() {
+              document.removeEventListener('DOMContentLoaded', update);
+              window.removeEventListener('resize', onResize);
+              if (observer) observer.disconnect();
+            }
+
+            function update() {
+              var artboards = selectChildren('.' + nameSpace + 'artboard[data-min-width]', container),
+                  width = Math.round(container.getBoundingClientRect().width);
+
+              // Set artboard visibility based on container width
+              artboards.forEach(function(el) {
+                var minwidth = el.getAttribute('data-min-width'),
+                    maxwidth = el.getAttribute('data-max-width');
+                if (+minwidth <= width && (+maxwidth >= width || maxwidth === null)) {
+                  if (!waiting) {
+                    selectChildren('.' + nameSpace + 'aiImg', el).forEach(updateImgSrc);
+                    selectChildren('video', el).forEach(updateVideoSrc);
+                  }
+                  el.style.display = 'block';
+                } else {
+                  el.style.display = 'none';
+                }
+              });
+
+              // Initialize lazy loading on first call
+              if (waiting && !observer) {
+                if (elementInView(container)) {
+                  waiting = false;
+                  update();
+                } else {
+                  observer = new IntersectionObserver(onIntersectionChange, {rootMargin: "800px"});
+                  observer.observe(container);
+                }
+              }
+            }
+
+            function onIntersectionChange(entries) {
+              // There may be multiple entries relating to the same container
+              // (captured at different times)
+              var isIntersecting = entries.reduce(function(memo, entry) {
+                return memo || entry.isIntersecting;
+              }, false);
+              if (isIntersecting) {
+                waiting = false;
+                // update: don't remove -- we need the observer to trigger an update
+                // when a hidden map becomes visible after user interaction
+                // (e.g. when an accordion menu or tab opens)
+                // observer.disconnect();
+                // observer = null;
+                update();
+              }
+            }
+          }
+
+          function findContainers(id) {
+            // support duplicate ids on the page
+            return selectChildren('.ai2html-responsive', document).filter(function(el) {
+              if (el.getAttribute('id') != id) return false;
+              if (el.classList.contains('ai2html-resizer')) return false;
+              el.classList.add('ai2html-resizer');
+              return true;
+            });
+          }
+
+          // Replace blank placeholder image with actual image
+          function updateImgSrc(img) {
+            var src = img.getAttribute('data-src');
+            if (src && img.getAttribute('src') != src) {
+              img.setAttribute('src', src);
+            }
+          }
+
+          function updateVideoSrc(el) {
+            var src = el.getAttribute('data-src');
+            if (src && !el.hasAttribute('src')) {
+              el.setAttribute('src', src);
+            }
+          }
+
+          function elementInView(el) {
+            var bounds = el.getBoundingClientRect();
+            return bounds.top < window.innerHeight && bounds.bottom > 0;
+          }
+
+          function selectChildren(selector, parent) {
+            return parent ? Array.prototype.slice.call(parent.querySelectorAll(selector)) : [];
+          }
+
+          // based on underscore.js
+          function throttle(func, wait) {
+            var timeout = null, previous = 0;
+            function run() {
+                previous = Date.now();
+                timeout = null;
+                func();
+            }
+            return function() {
+              var remaining = wait - (Date.now() - previous);
+              if (remaining <= 0 || remaining > wait) {
+                clearTimeout(timeout);
+                run();
+              } else if (!timeout) {
+                timeout = setTimeout(run, remaining);
+              }
+            };
+          }
+        })("g-quote-box", {namespace: "g-", setup: window.setupInteractive || window.getComponent});
+      </script>
+      <!-- End ai2html - 2025-04-14 10:19 -->
+    </div>
+  </div>
+</div>
+
+<div class="full-width-container">
+    <a href="narrative-dot-captions.html">next > </a>
+  </div>
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+<script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+const canvas = document.getElementById("dotCanvas");
+const ctx = canvas.getContext("2d");
+const width = canvas.width;
+const height = canvas.height;
+
+let dots = [];
+
+fetch("pre_grid_caption_frames.json")
+  .then(res => res.json())
+  .then(data => {
+    const maxVotes = Math.max(...data.map(d => d.x_votes));
+    const standout = data.find(d => d.highlight);
+
+    dots = data.map((d, i) => ({
+      id: d.id,
+      x: Math.random() * width,
+      y: Math.random() * height,
+      tx: Math.random() * width,
+      ty: Math.random() * height,
+      opacity: 0,
+      r: 2,
+      color: "black",
+      votes: d.x_votes,
+      highlight: d.highlight
+    }));
+
+    // Frame 0 – float in
+    function layout0() {
+      dots.forEach(dot => {
+        dot.tx = Math.random() * width;
+        dot.ty = Math.random() * height;
+        dot.opacity = 0.3;
+        dot.r = 2;
+        dot.color = dot.highlight ? "red" : "black";
+      });
+    }
+
+    // Frame 1 – vertical stacks based on vote tiers
+    function layout1() {
+      const tiers = 5;
+      dots.forEach(dot => {
+        const tier = Math.floor((dot.votes / maxVotes) * tiers);
+        dot.tx = width * 0.2 + Math.random() * width * 0.6;
+        dot.ty = height * 0.1 + (tier * height * 0.15) + Math.random() * 40;
+        dot.opacity = 0.6;
+        dot.r = 3;
+      });
+    }
+
+    // Frame 2 – highlight standout
+    function layout2() {
+      dots.forEach(dot => {
+        if (dot.highlight) {
+          dot.tx = width / 2;
+          dot.ty = height / 2;
+          dot.r = 12;
+          dot.opacity = 1;
+          dot.color = "#cc0000";
+        } else {
+          dot.opacity = 0.15;
+          dot.r = 2;
+        }
+      });
+    }
+
+    // Frame 3 – freeze frame 2
+    function layout3() {
+      layout2();
+    }
+
+    function updateLayout(f) {
+      if (f === 0) layout0();
+      else if (f === 1) layout1();
+      else if (f === 2) layout2();
+      else if (f === 3) layout3();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      dots.forEach(dot => {
+        dot.x += (dot.tx - dot.x) * 0.08;
+        dot.y += (dot.ty - dot.y) * 0.08;
+        dot.r += (dot.r_target ? dot.r_target - dot.r : 0) * 0.1;
+
+        ctx.beginPath();
+        ctx.globalAlpha = dot.opacity;
+        ctx.fillStyle = dot.color;
+        ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1.0;
+      });
+      requestAnimationFrame(draw);
+    }
+
+    // ScrollTriggers
+    document.querySelectorAll("section").forEach(sec => {
+      const f = parseInt(sec.dataset.frame);
+      ScrollTrigger.create({
+        trigger: sec,
+        start: "top center",
+        onEnter: () => updateLayout(f),
+        onEnterBack: () => updateLayout(f)
+      });
+    });
+
+    updateLayout(0);
+    draw();
+  });
+</script>
+
+</body>
+</html>
