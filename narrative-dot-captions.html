@@ -68,17 +68,16 @@
       display: inline-block;
       margin: 2rem 0;
       padding: 1rem 2rem;
-      background: transparent;
-      border: 2px solid black;
+      background: #f0f0f0;
       border-radius: 4px;
       text-decoration: none;
       color: #333;
       font-weight: 500;
-      transition: all 0.3s ease;
+      transition: background-color 0.3s ease;
     }
 
     .visualization-link:hover {
-      background: #f0f0f0;
+      background: #e0e0e0;
     }
 
     blockquote {
@@ -121,24 +120,9 @@
     /* Scrolly styles */
     .scrolly {
       position: relative;
-      width: 100%;
-      z-index: 3;
-    }
-
-    .step {
-      margin-bottom: 80vh;
-      opacity: 0;
-      height: 0.5px;
-      position: relative;
-      z-index: 3;
-    }
-
-    .step-content {
-      opacity: 1;
-      font-size: 1.25rem;
-      line-height: 1.5;
-      position: relative;
-      z-index: 3;
+      padding: 0;
+      max-width: 100%;
+      margin: 0 auto;
     }
 
     .overlay-box {
@@ -146,12 +130,10 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(255, 255, 255, 0.95);
-      padding: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2rem;
       border-radius: 8px;
-      max-width: 600px;
-      max-height: 300px;
-      display: inline-block;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       z-index: 2;
       pointer-events: none;
       opacity: 0;
@@ -163,41 +145,50 @@
     }
 
     #scroll-text {
-      font-size: 1.4rem;
-      font-weight: 400;
-      color: #111;
-      line-height: 1.6;
-      opacity: 0;
-      position: relative;
-      width: 100%;
-      height: auto;
-      background: transparent;
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      max-width: 600px;
+      margin: 0 auto;
       text-align: center;
-      transition: opacity 0.3s ease;
     }
 
-    #scroll-text.visible {
-      opacity: 1;
-    }
-
-    canvas {
+    #viz {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
       opacity: 0;
-      transition: opacity 0.5s ease;
-      pointer-events: auto;
+      transition: opacity 0.3s ease;
     }
 
-    canvas.visible {
+    #viz.visible {
       opacity: 1;
+    }
+
+    .steps {
+      position: relative;
+      z-index: 3;
+    }
+
+    .step {
+      margin-bottom: 70vh;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .step-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .caption-box {
+      font-family: 'Perfectly Nineties', cursive;
+      font-style: italic;
+      color: #cc0000;
+      margin-top: 1rem;
+      font-size: 1.2em;
     }
 
     /* Rest of your existing styles... */
@@ -205,8 +196,71 @@
   <script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.2.0/scrollama.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.3.0/d3.min.js"></script>
+  <style>
+    /* Navigation */
+    .nav-buttons {
+      text-align: center;
+      margin: 2rem;
+      position: relative;
+      z-index: 5;
+    }
+    
+    .nav-buttons button {
+      padding: 0.75rem 1.5rem;
+      margin: 0 0.5rem;
+      font-size: 1rem;
+      background: white;
+      color: black;
+      border: 2px solid black;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    
+    .nav-buttons button:hover {
+      background: #f6f6f6;
+    }
+  </style>
 </head>
 <body>
+  <div class="scrolly">
+    <div class="overlay-box">
+      <div id="scroll-text"></div>
+    </div>
+    <canvas id="viz"></canvas>
+    
+    <div class="steps">
+      <div class="step" data-frame="0">
+        <div class="step-content">
+          <h2>New Yorker Cartoon Contest #567</h2>
+          <p>We focused on one cartoon — a man embedded in a mattress with a coffee cup and briefcase. Readers submitted 4,014 captions submitted to the New Yorker contest 567.</p>
+        </div>
+      </div>
+      
+      <div class="step" data-frame="1">
+        <div class="step-content">
+          <h2>The Voting</h2>
+          <p>Some received thousands of votes. Most, only a few.</p>
+        </div>
+      </div>
+      
+      <div class="step" data-frame="2">
+        <div class="step-content">
+          <h2>One stood out</h2>
+          <p>Getting both the highest number of funny votes and unfunny votes.</p>
+        </div>
+      </div>
+      
+      <div class="step" data-frame="3">
+        <div class="step-content">
+          <h2>The Funniest Caption</h2>
+          <p>It had the highest average funniness score:</p>
+          <div class="caption-box">"Like I'm the first person who's tried sleeping their way to the top."</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Contest explanation section -->
   <div class="full-width-container">
@@ -796,9 +850,11 @@
       </div>
     </div>
   </div>
-  <div class="content-container">
-    <p>Captions with fewer words tended to score higher in funniness. The sweet spot? Around 50 characters. Brevity helps—but it's no guarantee.</p>
-    <p>We also found a subtle signal in punctuation. Captions ending in question marks slightly underperformed compared to those ending in periods or with no punctuation at all. The best jokes don't always ask—they tell.</p>
+  <div class="full-width-container">
+    <div class="content-container">
+      <p>We also found a subtle signal in punctuation. Captions ending in question marks slightly underperformed compared to those ending in periods or with no punctuation at all. The best jokes don't always ask—they tell. </p>
+    </div>
+    </div>
   </div>
   <div class="full-width-container">
 
@@ -1406,148 +1462,62 @@
           return parent ? Array.prototype.slice.call(parent.querySelectorAll(selector)) : [];
         }
 
+        // based on underscore.js
+        function throttle(func, wait) {
+          var timeout = null, previous = 0;
+          function run() {
+              previous = Date.now();
+              timeout = null;
+              func();
+          }
+          return function() {
+            var remaining = wait - (Date.now() - previous);
+            if (remaining <= 0 || remaining > wait) {
+              clearTimeout(timeout);
+              run();
+            } else if (!timeout) {
+              timeout = setTimeout(run, remaining);
+            }
+          };
+        }
+      })("g-captionlenght-box", {namespace: "g-", setup: window.setupInteractive || window.getComponent});
     </script>
     <!-- End ai2html - 2025-04-15 00:22 -->
 
   </div>
- 
+    <div class="full-width-container">
+      <div class="content-container">
+        <p>Captions with fewer words tended to score higher in funniness. The sweet spot? Around 50 characters. Brevity helps—but it's no guarantee.</p>
+      </div>
+    </div>
   <div class="full-width-container">
     <div class="content-container">
-      <p>These surface-level clues are helpful, but they don't tell the whole story. So we turned to machine learning to map humor styles across thousands of captions.</p>
+      <p>To better understand the humor landscape, we used a clustering algorithm to helps us identify the underlying humor categories that people find funny.</p>
       <p>Using UMAP and clustering on sentence embeddings, we projected all captions into a 2D humor map. Each point is a caption, each color a style.</p>
-      <a href="https://chilinhhovo.github.io/cluster_1/" class="visualization-link">Explore the UMAP Visualization →</a>
+      <a href="https://chilinhhovo.github.io/cluster_1/" class="visualization-link">Explore the UMAP Visualizationsection →</a>
     </div>
   </div>
 
 
   <script>
-    // Wait for DOM to be fully loaded
-    document.addEventListener("DOMContentLoaded", function() {
-      // First, ensure all required elements exist
-      const scrolly = document.querySelector(".scrolly");
-      const steps = document.querySelectorAll(".step");
-      const canvas = document.getElementById("viz");
-      const context = canvas.getContext("2d");
-      const tooltip = document.getElementById("tooltip");
-      const clusterLabel = document.getElementById("cluster-label");
-      const scrollText = document.getElementById("scroll-text");
-      const overlayBox = document.querySelector(".overlay-box");
-      
-      // Log for debugging
-      console.log("Scrolly element:", scrolly);
-      console.log("Number of steps:", steps.length);
-      
-      // Check if required elements exist
-      if (!scrolly) {
-        console.error("Scrolly container not found");
-        return;
-      }
-      
-      if (!steps.length) {
-        console.error("No step elements found");
-        return;
-      }
-      
-      if (!canvas) {
-        console.error("Canvas element not found");
-        return;
-      }
-
-      const clusterNames = [
-        "Wry Observations", "Grim Irony", "Food & Death", "Playful Absurdity", "Satirical Bureaucracy",
-        "Urban Dread", "Medical Sarcasm", "Death Courtroom", "Anthropomorphic Chaos", "Legal Fatalism"
-      ];
-    
+    document.addEventListener('DOMContentLoaded', function() {
+      const scrolly = document.querySelector('.scrolly');
+      const steps = document.querySelectorAll('.step');
+      const scrollText = document.getElementById('scroll-text');
+      const overlayBox = document.querySelector('.overlay-box');
+      const canvas = document.getElementById('viz');
       let dataFrames = [];
-      let dots = [];
       let currentFrame = 0;
-      const dotSize = 8;
-    
-      function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        drawDots(true);
+
+      if (!scrolly || !steps.length) {
+        console.error('Required elements not found. Make sure .scrolly and .step elements exist in the DOM.');
+        return;
       }
-    
-      function drawDots(interp = false) {
-        if (!dots.length) return;
-        
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        dots.forEach(dot => {
-          dot.x += (dot.tx - dot.x) * 0.2;
-          dot.y += (dot.ty - dot.y) * 0.2;
-          dot.opacity += (dot.tOpacity - dot.opacity) * 0.2;
-          dot.color = dot.highlight ? clusterColors[dot.cluster] : "#ccc";
-    
-          context.globalAlpha = dot.opacity;
-          context.fillStyle = dot.color;
-          context.fillRect(dot.x * canvas.width - dotSize / 2, dot.y * canvas.height - dotSize / 2, dotSize, dotSize);
-        });
-        context.globalAlpha = 1;
-        if (interp) requestAnimationFrame(() => drawDots(true));
-      }
-    
-      const clusterColors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"];
-    
-      function updateFrame(index) {
-        currentFrame = index;
-        const targetDots = dataFrames[index];
-        
-        if (!targetDots) return;
-    
-        clusterLabel.textContent = (index >= 2 && index <= 11)
-          ? `Cluster ${index - 2}: ${clusterNames[index - 2]}`
-          : "";
-          
-        if (dots.length !== targetDots.length) {
-          dots = targetDots.map(d => ({
-            ...d,
-            x: d.x,
-            y: d.y,
-            tx: d.x,
-            ty: d.y,
-            opacity: d.highlight ? 1 : 0.3,
-            tOpacity: d.highlight ? 1 : 0.3,
-            highlight: d.highlight,
-            caption: d.caption,
-            cluster: d.cluster
-          }));
-        } else {
-          targetDots.forEach((d, i) => {
-            dots[i].tx = d.x;
-            dots[i].ty = d.y;
-            dots[i].tOpacity = d.highlight ? 1 : 0.3;
-            dots[i].highlight = d.highlight;
-            dots[i].caption = d.caption;
-            dots[i].cluster = d.cluster;
-          });
-        }
-    
-        drawDots(true);
-      }
-    
-      canvas.addEventListener("mousemove", (e) => {
-        const rect = canvas.getBoundingClientRect();
-        const mx = (e.clientX - rect.left) / canvas.width;
-        const my = (e.clientY - rect.top) / canvas.height;
-    
-        let found = false;
-        dots.forEach(dot => {
-          const dx = dot.x - mx;
-          const dy = dot.y - my;
-          if (Math.sqrt(dx * dx + dy * dy) < 0.01) {
-            tooltip.style.left = `${e.clientX + 10}px`;
-            tooltip.style.top = `${e.clientY + 10}px`;
-            tooltip.innerHTML = dot.caption;
-            tooltip.style.display = "block";
-            found = true;
-          }
-        });
-        if (!found) tooltip.style.display = "none";
-      });
 
       function setupScroll() {
         console.log("Setting up scrollama...");
+        console.log("Scrolly element:", scrolly);
+        console.log("Number of steps:", steps.length);
         
         const scroller = scrollama();
         
@@ -1564,7 +1534,6 @@
               const el = response.element;
               const content = el.querySelector(".step-content")?.innerHTML || el.innerHTML;
               
-              // Show scroll text, overlay box, and canvas when we reach the visualization section
               if (el.dataset.frame === "0") {
                 scrollText.classList.add('visible');
                 overlayBox.classList.add('visible');
@@ -1577,7 +1546,6 @@
             })
             .onStepExit((response) => {
               console.log("Step exited:", response);
-              // Hide scroll text, overlay box, and canvas when we leave the visualization section
               if (response.direction === "up" && response.element.dataset.frame === "0") {
                 scrollText.classList.remove('visible');
                 overlayBox.classList.remove('visible');
@@ -1590,7 +1558,38 @@
           console.error("Error setting up scrollama:", error);
         }
       }
-    
+
+      function resizeCanvas() {
+        if (!canvas) return;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        drawDots(true);
+      }
+
+      function updateFrame(frame) {
+        if (!dataFrames[frame]) {
+          console.error("Frame data not found:", frame);
+          return;
+        }
+        currentFrame = frame;
+        drawDots(true);
+      }
+
+      function drawDots(force = false) {
+        if (!canvas || !dataFrames[currentFrame]) return;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        dataFrames[currentFrame].forEach(dot => {
+          ctx.beginPath();
+          ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
+          ctx.fillStyle = dot.color;
+          ctx.fill();
+        });
+      }
+
       fetch("human_clusters_scroll_frames_v3_REBUILT.json")
         .then(res => res.json())
         .then(json => {
@@ -1601,7 +1600,7 @@
           setupScroll();
         })
         .catch(err => console.error("Failed to load JSON:", err));
-    
+
       window.addEventListener("resize", () => {
         resizeCanvas();
         updateFrame(currentFrame);
@@ -1620,31 +1619,299 @@
       display: inline-block;
       margin: 2rem 0;
       padding: 1rem 2rem;
-      background: transparent;
-      border: 2px solid black;
+      background: #f0f0f0;
       border-radius: 4px;
       text-decoration: none;
       color: #333;
       font-weight: 500;
-      transition: all 0.3s ease;
+      transition: background-color 0.3s ease;
     }
 
     .visualization-link:hover {
-      background: #f0f0f0;
+      background: #e0e0e0;
     }
   </style>
 
-  <div class="content">
-    <div class="overlay-box">
-      <div id="scroll-text">Loading...</div>
-    </div>
-    <canvas id="viz"></canvas>
-    <div id="tooltip"></div>
-    <div id="cluster-label"></div>
+  <div class="nav-buttons">
+    <button onclick="handleNextClick()">Next</button>
   </div>
 
-  <script>
-    // ... existing code ...
+  <!-- Generated by ai2html v0.121.1 - 2025-04-15 04:59 -->
+  <!-- ai file: word_limit.ai -->
+  <style media="screen,print">
+  	#g-word_limit-box ,
+  	#g-word_limit-box .g-artboard {
+  		margin:0 auto;
+  	}
+  	#g-word_limit-box p {
+  		margin:0;
+  	}
+  	#g-word_limit-box .g-aiAbs {
+  		position:absolute;
+  	}
+  	#g-word_limit-box .g-aiImg {
+  		position:absolute;
+  		top:0;
+  		display:block;
+  		width:100% !important;
+  	}
+  	#g-word_limit-box .g-aiSymbol {
+  		position: absolute;
+  		box-sizing: border-box;
+  	}
+  	#g-word_limit-box .g-aiPointText p { white-space: nowrap; }
+  	#g-word_limit-full_copy {
+  		position:relative;
+  		overflow:hidden;
+  	}
+  	#g-word_limit-full_copy p {
+  		font-weight:regular;
+  		line-height:36px;
+  		opacity:1;
+  		letter-spacing:0em;
+  		font-size:24px;
+  		text-align:left;
+  		color:rgb(0,0,0);
+  		text-transform:none;
+  		padding-bottom:0;
+  		padding-top:0;
+  		mix-blend-mode:normal;
+  		font-style:normal;
+  		height:auto;
+  		position:static;
+  	}
+  	#g-word_limit-full_copy .g-pstyle0 {
+  		font-weight:500;
+  		font-size:18px;
+  		text-align:center;
+  	}
+  	#g-word_limit-full_copy .g-pstyle1 {
+  		font-weight:500;
+  		text-align:center;
+  	}
+  	#g-word_limit-medium_copy {
+  		position:relative;
+  		overflow:hidden;
+  	}
+  	#g-word_limit-medium_copy p {
+  		font-weight:regular;
+  		line-height:36px;
+  		opacity:1;
+  		letter-spacing:0em;
+  		font-size:24px;
+  		text-align:left;
+  		color:rgb(0,0,0);
+  		text-transform:none;
+  		padding-bottom:0;
+  		padding-top:0;
+  		mix-blend-mode:normal;
+  		font-style:normal;
+  		height:auto;
+  		position:static;
+  	}
+  	#g-word_limit-medium_copy .g-pstyle0 {
+  		font-weight:500;
+  		font-size:18px;
+  		text-align:center;
+  	}
+  	#g-word_limit-medium_copy .g-pstyle1 {
+  		font-weight:500;
+  		text-align:center;
+  	}
+  	#g-word_limit-mobile_copy {
+  		position:relative;
+  		overflow:hidden;
+  	}
+  	#g-word_limit-mobile_copy p {
+  		font-weight:regular;
+  		line-height:36px;
+  		opacity:1;
+  		letter-spacing:0em;
+  		font-size:24px;
+  		text-align:left;
+  		color:rgb(0,0,0);
+  		text-transform:none;
+  		padding-bottom:0;
+  		padding-top:0;
+  		mix-blend-mode:normal;
+  		font-style:normal;
+  		height:auto;
+  		position:static;
+  	}
+  	#g-word_limit-mobile_copy .g-pstyle0 {
+  		font-weight:500;
+  		font-size:18px;
+  		text-align:center;
+  	}
+  	#g-word_limit-mobile_copy .g-pstyle1 {
+  		font-weight:500;
+  		text-align:center;
+  	}
+  </style>
+
+  <div id="g-word_limit-box" class="ai2html ai2html-responsive">
+  	<!-- Artboard: full_copy -->
+  	<div id="g-word_limit-full_copy" class="g-artboard" style="width:700px; height:425px;" data-aspect-ratio="1.647" data-min-width="700">
+  		<img id="g-word_limit-full_copy-img" class="g-word_limit-full_copy-img g-aiImg" alt="" src="word_limit-full_copy.png"/>
+  		<div id="g-ai0-1" class="g-ai2html-settings g-aiAbs" style="top:17.1765%;left:16.0169%;margin-left:-14.5714%;width:29.1429%;">
+  			<p class="g-pstyle0">Something real</p>
+  		</div>
+  		<div id="g-ai0-2" class="g-ai2html-settings g-aiAbs" style="top:39.7647%;left:51.7185%;margin-left:-22%;width:44%;">
+  			<p class="g-pstyle1">Like     I'm the first person who's tried sleeping their way to the top</p>
+  		</div>
+  		<div id="g-ai0-3" class="g-ai2html-settings g-aiAbs" style="top:76.7059%;left:77.5169%;margin-left:-16.6429%;width:33.2857%;">
+  			<p class="g-pstyle0">Something surprising</p>
+  		</div>
+  	</div>
+
+  	<!-- Artboard: medium_copy -->
+  	<div id="g-word_limit-medium_copy" class="g-artboard" style="width:490px; height:350px;" data-aspect-ratio="1.4" data-min-width="490" data-max-width="699">
+  		<img id="g-word_limit-medium_copy-img" class="g-word_limit-medium_copy-img g-aiImg" alt="" src="word_limit-medium_copy.png"/>
+  		<div id="g-ai1-1" class="g-ai2html-settings g-aiAbs" style="top:12.8571%;left:17.065%;margin-left:-20.8163%;width:41.6327%;">
+  			<p class="g-pstyle0">Something real</p>
+  		</div>
+  		<div id="g-ai1-2" class="g-ai2html-settings g-aiAbs" style="top:34.8571%;left:55.2101%;margin-left:-31.4286%;width:62.8571%;">
+  			<p class="g-pstyle1">Like     I'm the first person who's tried sleeping their way to the top</p>
+  		</div>
+  		<div id="g-ai1-3" class="g-ai2html-settings g-aiAbs" style="top:80.5714%;left:79.0037%;margin-left:-23.7755%;width:47.551%;">
+  			<p class="g-pstyle0">Something surprising</p>
+  		</div>
+  	</div>
+
+  	<!-- Artboard: mobile_copy -->
+  	<div id="g-word_limit-mobile_copy" class="g-artboard" style="max-width: 375px;max-height: 328px" data-aspect-ratio="1.144" data-min-width="0" data-max-width="489">
+  		<img id="g-word_limit-mobile_copy-img" class="g-word_limit-mobile_copy-img g-aiImg" alt="" src="word_limit-mobile_copy.png"/>
+  		<div id="g-ai2-1" class="g-ai2html-settings g-aiAbs" style="top:13.7279%;left:53.3649%;margin-left:-27.2%;width:54.4%;">
+  			<p class="g-pstyle0">Something real</p>
+  		</div>
+  		<div id="g-ai2-2" class="g-ai2html-settings g-aiAbs" style="top:32.9469%;left:52.5412%;margin-left:-41.0667%;width:82.1333%;">
+  			<p class="g-pstyle1">Like     I'm the first person who's tried sleeping their way to the top</p>
+  		</div>
+  		<div id="g-ai2-3" class="g-ai2html-settings g-aiAbs" style="top:82.0622%;left:69.2316%;margin-left:-31.0667%;width:62.1333%;">
+  			<p class="g-pstyle0">Something surprising</p>
+  		</div>
+  	</div>
+  </div>
+
+  <script type="text/javascript">
+  	(function (containerId, opts) {
+  		var nameSpace = opts.namespace || '';
+  		var containers = findContainers(containerId);
+  		containers.forEach(resize);
+
+  		function resize(container) {
+  			var onResize = throttle(update, 200);
+  			var waiting = !!window.IntersectionObserver;
+  			var observer;
+  			update();
+
+  			document.addEventListener('DOMContentLoaded', update);
+  			window.addEventListener('resize', onResize);
+
+  			// NYT Scoop-specific code
+  			if (opts.setup) {
+  				opts.setup(container).on('cleanup', cleanup);
+  			}
+
+  			function cleanup() {
+  				document.removeEventListener('DOMContentLoaded', update);
+  				window.removeEventListener('resize', onResize);
+  				if (observer) observer.disconnect();
+  			}
+
+  			function update() {
+  				var artboards = selectChildren('.' + nameSpace + 'artboard[data-min-width]', container),
+  						width = Math.round(container.getBoundingClientRect().width);
+
+  				// Set artboard visibility based on container width
+  				artboards.forEach(function(el) {
+  					var minwidth = el.getAttribute('data-min-width'),
+  							maxwidth = el.getAttribute('data-max-width');
+  					if (+minwidth <= width && (+maxwidth >= width || maxwidth === null)) {
+  						if (!waiting) {
+  							selectChildren('.' + nameSpace + 'aiImg', el).forEach(updateImgSrc);
+  							selectChildren('video', el).forEach(updateVideoSrc);
+  						}
+  						el.style.display = 'block';
+  					} else {
+  						el.style.display = 'none';
+  					}
+  				});
+
+  				// Initialize lazy loading on first call
+  				if (waiting && !observer) {
+  					if (elementInView(container)) {
+  						waiting = false;
+  						update();
+  					} else {
+  						observer = new IntersectionObserver(onIntersectionChange, {rootMargin: "800px"});
+  						observer.observe(container);
+  					}
+  				}
+  			}
+
+  			function onIntersectionChange(entries) {
+  				var isIntersecting = entries.reduce(function(memo, entry) {
+  					return memo || entry.isIntersecting;
+  				}, false);
+  				if (isIntersecting) {
+  					waiting = false;
+  					update();
+  				}
+  			}
+  		}
+
+  		function findContainers(id) {
+  			return selectChildren('.ai2html-responsive', document).filter(function(el) {
+  				if (el.getAttribute('id') != id) return false;
+  				if (el.classList.contains('ai2html-resizer')) return false;
+  				el.classList.add('ai2html-resizer');
+  				return true;
+  			});
+  		}
+
+  		function updateImgSrc(img) {
+  			var src = img.getAttribute('data-src');
+  			if (src && img.getAttribute('src') != src) {
+  				img.setAttribute('src', src);
+  			}
+  		}
+
+  		function updateVideoSrc(el) {
+  			var src = el.getAttribute('data-src');
+  			if (src && !el.hasAttribute('src')) {
+  				el.setAttribute('src', src);
+  			}
+  		}
+
+  		function elementInView(el) {
+  			var bounds = el.getBoundingClientRect();
+  			return bounds.top < window.innerHeight && bounds.bottom > 0;
+  		}
+
+  		function selectChildren(selector, parent) {
+  			return parent ? Array.prototype.slice.call(parent.querySelectorAll(selector)) : [];
+  		}
+
+  		function throttle(func, wait) {
+  			var timeout = null, previous = 0;
+  			function run() {
+  				previous = Date.now();
+  				timeout = null;
+  				func();
+  			}
+  			return function() {
+  				var remaining = wait - (Date.now() - previous);
+  				if (remaining <= 0 || remaining > wait) {
+  					clearTimeout(timeout);
+  					run();
+  				} else if (!timeout) {
+  					timeout = setTimeout(run, remaining);
+  				}
+  			};
+  		}
+  	})("g-word_limit-box", {namespace: "g-", setup: window.setupInteractive || window.getComponent});
   </script>
+
 </body>
 </html>
