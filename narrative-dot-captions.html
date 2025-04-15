@@ -68,16 +68,17 @@
       display: inline-block;
       margin: 2rem 0;
       padding: 1rem 2rem;
-      background: #f0f0f0;
+      background: transparent;
+      border: 2px solid black;
       border-radius: 4px;
       text-decoration: none;
       color: #333;
       font-weight: 500;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     .visualization-link:hover {
-      background: #e0e0e0;
+      background: #f0f0f0;
     }
 
     blockquote {
@@ -796,8 +797,8 @@
     </div>
   </div>
   <div class="content-container">
-    <p>Captions with fewer words tended to score higher in funniness. The sweet spot? Around 50 characters. Brevity helps—but it’s no guarantee.</p>
-    <p>We also found a subtle signal in punctuation. Captions ending in question marks slightly underperformed compared to those ending in periods or with no punctuation at all. The best jokes don’t always ask—they tell.</p>
+    <p>Captions with fewer words tended to score higher in funniness. The sweet spot? Around 50 characters. Brevity helps—but it's no guarantee.</p>
+    <p>We also found a subtle signal in punctuation. Captions ending in question marks slightly underperformed compared to those ending in periods or with no punctuation at all. The best jokes don't always ask—they tell.</p>
   </div>
   <div class="full-width-container">
 
@@ -1405,25 +1406,6 @@
           return parent ? Array.prototype.slice.call(parent.querySelectorAll(selector)) : [];
         }
 
-        // based on underscore.js
-        function throttle(func, wait) {
-          var timeout = null, previous = 0;
-          function run() {
-              previous = Date.now();
-              timeout = null;
-              func();
-          }
-          return function() {
-            var remaining = wait - (Date.now() - previous);
-            if (remaining <= 0 || remaining > wait) {
-              clearTimeout(timeout);
-              run();
-            } else if (!timeout) {
-              timeout = setTimeout(run, remaining);
-            }
-          };
-        }
-      })("g-captionlenght-box", {namespace: "g-", setup: window.setupInteractive || window.getComponent});
     </script>
     <!-- End ai2html - 2025-04-15 00:22 -->
 
@@ -1431,9 +1413,9 @@
  
   <div class="full-width-container">
     <div class="content-container">
-      <p>These surface-level clues are helpful, but they don’t tell the whole story. So we turned to machine learning to map humor styles across thousands of captions.</p>
+      <p>These surface-level clues are helpful, but they don't tell the whole story. So we turned to machine learning to map humor styles across thousands of captions.</p>
       <p>Using UMAP and clustering on sentence embeddings, we projected all captions into a 2D humor map. Each point is a caption, each color a style.</p>
-      <a href="https://chilinhhovo.github.io/cluster_1/" class="visualization-link">Explore the UMAP Visualizationsection →</a>
+      <a href="https://chilinhhovo.github.io/cluster_1/" class="visualization-link">Explore the UMAP Visualization →</a>
     </div>
   </div>
 
@@ -1638,49 +1620,31 @@
       display: inline-block;
       margin: 2rem 0;
       padding: 1rem 2rem;
-      background: #f0f0f0;
+      background: transparent;
+      border: 2px solid black;
       border-radius: 4px;
       text-decoration: none;
       color: #333;
       font-weight: 500;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     .visualization-link:hover {
-      background: #e0e0e0;
+      background: #f0f0f0;
     }
   </style>
 
-  <div class="nav-buttons" id="nav-buttons">
-    <button onclick="navigate(-1)">Previous</button>
-    <button onclick="handleNextClick()">Next</button>
+  <div class="content">
+    <div class="overlay-box">
+      <div id="scroll-text">Loading...</div>
+    </div>
+    <canvas id="viz"></canvas>
+    <div id="tooltip"></div>
+    <div id="cluster-label"></div>
   </div>
 
   <script>
-    const sections = document.querySelectorAll("section");
-    let currentSection = 0;
-
-    function showSection(index) {
-      sections.forEach((section, i) => {
-        section.classList.toggle("active", i === index);
-      });
-    }
-
-    function navigate(direction) {
-      currentSection = Math.max(0, Math.min(sections.length - 1, currentSection + direction));
-      showSection(currentSection);
-    }
-    
-    function handleNextClick() {
-      if (currentSection === sections.length - 1) {
-        window.location.href = "https://chilinhhovo.github.io/cartoon/";
-      } else {
-        navigate(1);
-      }
-    }
-
-    showSection(currentSection);
+    // ... existing code ...
   </script>
-
 </body>
 </html>
